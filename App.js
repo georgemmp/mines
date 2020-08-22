@@ -1,20 +1,15 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, StatusBar} from 'react-native';
 
-import params from './src/params';
+import Field from './src/components/Field';
 
 const App: () => React$Node = () => {
-  const {getColumnsAmount, getRowsAmout} = params;
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <View style={styles.container}>
-          <Text style={styles.welcome}>
-            {getRowsAmout()}x{getColumnsAmount()}
-          </Text>
-        </View>
-      </SafeAreaView>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+      <View style={styles.container}>
+        <Field />
+      </View>
     </>
   );
 };
@@ -24,12 +19,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
   },
 });
 
