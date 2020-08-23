@@ -14,6 +14,9 @@ const App: () => React$Node = () => {
         <Field opened nearMines={2} />
         <Field opened nearMines={3} />
         <Field opened nearMines={6} />
+        <Field mined />
+        <Field mined opened />
+        <Field mined opened exploded />
       </View>
     </>
   );
