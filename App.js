@@ -1,11 +1,18 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, StatusBar} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, StatusBar, Alert} from 'react-native';
 
 import params from './src/params';
 
 import MineField from './src/components/MineField';
 
-import {createMinedBoard} from './src/functions';
+import {
+  createMinedBoard,
+  cloneBoard,
+  openField,
+  hadExplosion,
+  wonGame,
+  showMines,
+} from './src/functions';
 
 const App: () => React$Node = () => {
   const minesAmount = () => {
@@ -15,23 +22,45 @@ const App: () => React$Node = () => {
     return Math.ceil(cols * rows * params.difficultLevel);
   };
 
-  const createState = () => {
+  useEffect(() => {
     const cols = params.getColumnsAmount();
     const rows = params.getRowsAmout();
 
-    return {
-      board: createMinedBoard(rows, cols, minesAmount()),
-    };
-  };
+    setBoard(createMinedBoard(rows, cols, minesAmount()));
+  }, []);
 
-  const [board, setBoard] = useState(createState());
+  const [board, setBoard] = useState([[]]);
+  const [won, setWon] = useState(false);
+  const [lost, setLost] = useState(false);
+
+  const onOpenField = (row, column) => {
+    const clone = cloneBoard(board);
+
+    openField(clone, row, column);
+
+    const l = hadExplosion(clone);
+    const w = wonGame(clone);
+
+    if (l) {
+      showMines(clone);
+      Alert.alert('Perdeu!', 'Você acabou explodindo!');
+    }
+
+    if (w) {
+      Alert.alert('Parabéns!', 'Você passou sem se espedaçar todo!');
+    }
+
+    setBoard(clone);
+    setLost(l);
+    setWon(w);
+  };
 
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
       <View style={styles.container}>
         <View style={styles.board}>
-          <MineField board={board.board} />
+          <MineField board={board} onOpenField={onOpenField} />
         </View>
       </View>
     </>

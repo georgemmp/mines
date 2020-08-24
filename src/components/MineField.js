@@ -6,7 +6,13 @@ import Field from './Field';
 export default (props) => {
   const rows = props.board.map((row, rowIndex) => {
     const columns = row.map((field, columnIndex) => {
-      return <Field {...field} key={columnIndex} />;
+      return (
+        <Field
+          {...field}
+          key={columnIndex}
+          onOpen={() => props.onOpenField(rowIndex, columnIndex)}
+        />
+      );
     });
 
     return (
