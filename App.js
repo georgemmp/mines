@@ -4,6 +4,7 @@ import {StyleSheet, View, StatusBar, Alert} from 'react-native';
 import params from './src/params';
 
 import MineField from './src/components/MineField';
+import Header from './src/components/Header';
 
 import {
   createMinedBoard,
@@ -13,6 +14,7 @@ import {
   wonGame,
   showMines,
   invertFlag,
+  flagsUsed,
 } from './src/functions';
 
 const App: () => React$Node = () => {
@@ -24,56 +26,70 @@ const App: () => React$Node = () => {
   };
 
   useEffect(() => {
+    setBoard(buildField());
+  }, []);
+
+  const [board, setBoard] = useState([]);
+  const [won, setWon] = useState(false);
+  const [lost, setLost] = useState(false);
+
+  const buildField = () => {
     const cols = params.getColumnsAmount();
     const rows = params.getRowsAmout();
 
-    setBoard(createMinedBoard(rows, cols, minesAmount()));
-  }, []);
+    const buildedBoard = createMinedBoard(rows, cols, minesAmount());
 
-  const [board, setBoard] = useState([[]]);
-  const [won, setWon] = useState(false);
-  const [lost, setLost] = useState(false);
+    return buildedBoard;
+  };
+
+  const newGame = () => {
+    setBoard(buildField());
+  };
 
   const onOpenField = (row, column) => {
     const clone = cloneBoard(board);
 
     openField(clone, row, column);
 
-    const l = hadExplosion(clone);
-    const w = wonGame(clone);
+    const lost = hadExplosion(clone);
+    const won = wonGame(clone);
 
-    if (l) {
+    if (lost) {
       showMines(clone);
       Alert.alert('Perdeu!', 'Você acabou explodindo!');
     }
 
-    if (w) {
+    if (won) {
       Alert.alert('Parabéns!', 'Você passou sem se espedaçar todo!');
     }
 
     setBoard(clone);
-    setLost(l);
-    setWon(w);
+    setLost(lost);
+    setWon(won);
   };
 
   const onSelectField = (row, column) => {
     const clone = cloneBoard(board);
     invertFlag(clone, row, column);
 
-    const w = wonGame(clone);
+    const won = wonGame(clone);
 
-    if (w) {
+    if (won) {
       Alert.alert('Parabéns!', 'Você passou sem se espedaçar todo!');
     }
 
     setBoard(clone);
-    setWon(w);
+    setWon(won);
   };
 
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
       <View style={styles.container}>
+        <Header
+          flagsLeft={minesAmount() - flagsUsed(board)}
+          onNewGame={() => newGame()}
+        />
         <View style={styles.board}>
           <MineField
             board={board}

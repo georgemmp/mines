@@ -112,6 +112,9 @@ const showMines = (board) =>
     .filter((field) => field.mined)
     .forEach((field) => (field.opened = true));
 
+const flagsUsed = (board) =>
+  fields(board).filter((field) => field.flagged).length;
+
 export {
   createMinedBoard,
   cloneBoard,
@@ -120,4 +123,5 @@ export {
   wonGame,
   showMines,
   invertFlag,
+  flagsUsed,
 };
