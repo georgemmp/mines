@@ -9,7 +9,11 @@ export default (props) => {
       return <Field {...field} key={columnIndex} />;
     });
 
-    return <View key={rowIndex}>{columns}</View>;
+    return (
+      <View key={rowIndex} style={{flexDirection: 'row'}}>
+        {columns}
+      </View>
+    );
   });
 
   return <View style={styles.container}>{rows}</View>;
@@ -17,7 +21,6 @@ export default (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     backgroundColor: '#EEE',
   },
 });
