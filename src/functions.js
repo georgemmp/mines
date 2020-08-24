@@ -102,6 +102,11 @@ const pendding = (field) =>
 
 const wonGame = (board) => fields(board).filter(pendding).length === 0;
 
+const invertFlag = (board, row, column) => {
+  const field = board[row][column];
+  field.flagged = !field.flagged;
+};
+
 const showMines = (board) =>
   fields(board)
     .filter((field) => field.mined)
@@ -114,4 +119,5 @@ export {
   hadExplosion,
   wonGame,
   showMines,
+  invertFlag,
 };

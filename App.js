@@ -12,6 +12,7 @@ import {
   hadExplosion,
   wonGame,
   showMines,
+  invertFlag,
 } from './src/functions';
 
 const App: () => React$Node = () => {
@@ -55,12 +56,30 @@ const App: () => React$Node = () => {
     setWon(w);
   };
 
+  const onSelectField = (row, column) => {
+    const clone = cloneBoard(board);
+    invertFlag(clone, row, column);
+
+    const w = wonGame(clone);
+
+    if (w) {
+      Alert.alert('Parabéns!', 'Você passou sem se espedaçar todo!');
+    }
+
+    setBoard(clone);
+    setWon(w);
+  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
       <View style={styles.container}>
         <View style={styles.board}>
-          <MineField board={board} onOpenField={onOpenField} />
+          <MineField
+            board={board}
+            onOpenField={onOpenField}
+            onSelectField={onSelectField}
+          />
         </View>
       </View>
     </>
