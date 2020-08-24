@@ -1,24 +1,38 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, View, StatusBar} from 'react-native';
 
-import Field from './src/components/Field';
+import params from './src/params';
+
+import MineField from './src/components/MineField';
+
+import {createMinedBoard} from './src/functions';
 
 const App: () => React$Node = () => {
+  const minesAmount = () => {
+    const cols = params.getColumnsAmount();
+    const rows = params.getRowsAmout();
+
+    return Math.ceil(cols * rows * params.difficultLevel);
+  };
+
+  const createState = () => {
+    const cols = params.getColumnsAmount();
+    const rows = params.getRowsAmout();
+
+    return {
+      board: createMinedBoard(rows, cols, minesAmount()),
+    };
+  };
+
+  const [board, setBoard] = useState(createState());
+
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
       <View style={styles.container}>
-        <Field />
-        <Field opened />
-        <Field opened nearMines={1} />
-        <Field opened nearMines={2} />
-        <Field opened nearMines={3} />
-        <Field opened nearMines={6} />
-        <Field mined />
-        <Field mined opened />
-        <Field mined opened exploded />
-        <Field flagged />
-        <Field flagged opened />
+        <View style={styles.board}>
+          <MineField board={board.board} />
+        </View>
       </View>
     </>
   );
@@ -27,8 +41,11 @@ const App: () => React$Node = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+  },
+  board: {
     alignItems: 'center',
+    backgroundColor: '#AAA',
   },
 });
 
