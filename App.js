@@ -87,7 +87,7 @@ const App: () => React$Node = () => {
   const onLevelSelected = (level) => {
     params.difficultLevel = level;
     setLevelSelection(false);
-    buildField();
+    setBoard(buildField());
   };
 
   const showLevelSelect = () => {
