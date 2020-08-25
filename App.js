@@ -5,6 +5,7 @@ import params from './src/params';
 
 import MineField from './src/components/MineField';
 import Header from './src/components/Header';
+import LevelSelection from './src/screens/LevelSelection';
 
 import {
   createMinedBoard,
@@ -18,13 +19,6 @@ import {
 } from './src/functions';
 
 const App: () => React$Node = () => {
-  const minesAmount = () => {
-    const cols = params.getColumnsAmount();
-    const rows = params.getRowsAmout();
-
-    return Math.ceil(cols * rows * params.difficultLevel);
-  };
-
   useEffect(() => {
     setBoard(buildField());
   }, []);
@@ -32,6 +26,14 @@ const App: () => React$Node = () => {
   const [board, setBoard] = useState([]);
   const [won, setWon] = useState(false);
   const [lost, setLost] = useState(false);
+  const [levelSelection, setLevelSelection] = useState(false);
+
+  const minesAmount = () => {
+    const cols = params.getColumnsAmount();
+    const rows = params.getRowsAmout();
+
+    return Math.ceil(cols * rows * params.difficultLevel);
+  };
 
   const buildField = () => {
     const cols = params.getColumnsAmount();
@@ -82,13 +84,33 @@ const App: () => React$Node = () => {
     setWon(won);
   };
 
+  const onLevelSelected = (level) => {
+    params.difficultLevel = level;
+    setLevelSelection(false);
+    buildField();
+  };
+
+  const showLevelSelect = () => {
+    setLevelSelection(true);
+  };
+
+  const closeModal = () => {
+    setLevelSelection(false);
+  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
       <View style={styles.container}>
+        <LevelSelection
+          isVisible={levelSelection}
+          onLevelSelected={onLevelSelected}
+          onCancel={closeModal}
+        />
         <Header
           flagsLeft={minesAmount() - flagsUsed(board)}
           onNewGame={() => newGame()}
+          onFlagPress={() => showLevelSelect()}
         />
         <View style={styles.board}>
           <MineField
